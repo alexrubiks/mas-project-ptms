@@ -23,12 +23,10 @@ class Bus:
                 self.path = None
 
         if self.path:
-            # Déplacer le bus d'un pixel vers le prochain point du chemin
-            target_x, target_y = self.path[0]  # Premier point à atteindre dans le chemin
+            target_x, target_y = self.path[0]
             dx = target_x - self.x
             dy = target_y - self.y
 
-            # Normaliser les déplacements pour avancer d'un pixel
             if dx != 0:
                 if dx > 0:
                     self.facing = "E"
@@ -44,11 +42,9 @@ class Bus:
                     self.facing = "N"
                     self.y -= speed
 
-            # Si le bus atteint la position actuelle du chemin, passer au point suivant
             if (self.x, self.y) == (target_x, target_y):
-                self.path.pop(0)  # Retirer le premier point du chemin
+                self.path.pop(0)
 
-        # Si le chemin est terminé, marquer le bus comme arrivé
         if not self.path:
             print(f"Bus arrivé à l'arrêt : {self.next_stop}")
 
