@@ -1,4 +1,5 @@
 import pygame
+from src.bus import Bus
 from src.render import Render
 
 ROWS = 6
@@ -22,7 +23,9 @@ def main():
     # Initialisation des arrêts de bus
     bus_stops = [(100, 30), (430, 100), (530, 260), (530, 500), (260, 530)]
     bus_path = [(100, 30), (430, 30), (430, 230), (530, 230), (530, 530), (260, 530)]
-    # bus_lines = BusLine(path, stops)
+
+    bus_list = []
+    bus_list.append(Bus(bus_stops[0][0], bus_stops[0][1], bus_stops))
     
     running = True
     while running:
@@ -30,18 +33,22 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-            
-        
+
         # Affichage des éléments à l'écran
         screen.fill((255, 255, 255))
         render.draw_grid(30, 30)
         render.draw_bus_path(bus_path)
         render.draw_bus_stops(bus_stops)
-
+        render.draw_bus(bus_list)
 
         # Actualisation de l'affichage
         pygame.display.flip()
         clock.tick(FPS)
+
+        # Actions des agents
+        for bus in bus_list:
+            if bus.remaining:
+                bus.make_progress(speed=1)
 
     pygame.quit()
 

@@ -69,4 +69,32 @@ class Render:
                 (255, 0, 0),
                 (x-4, y-4, 10, 10)
             )
+        
+    def draw_bus(self, bus_list):
+        """
+        Dessine les bus sur la carte.
+        :param bus_list: Liste d'objets Bus à dessiner.
+        """
+        glass_color = (0, 255, 255)
+        for bus in bus_list:
+            x, y = bus.x, bus.y
 
+            if bus.facing == "N":
+                pygame.draw.rect(self.screen, (0, 0, 0), (x-5, y-13, 12, 26))
+                pygame.draw.rect(self.screen, (200, 0, 0), (x-4, y-12, 10, 24))
+                pygame.draw.rect(self.screen, glass_color, (x-3, y-11, 8, 4))
+
+            elif bus.facing == "E":
+                pygame.draw.rect(self.screen, (0, 0, 0), (x-13, y-5, 26, 12))
+                pygame.draw.rect(self.screen, (200, 0, 0), (x-12, y-4, 24, 10))
+                pygame.draw.rect(self.screen, glass_color, (x+8, y-3, 4, 8))
+
+            elif bus.facing == "S":
+                pygame.draw.rect(self.screen, (0, 0, 0), (x-5, y-13, 12, 26))
+                pygame.draw.rect(self.screen, (200, 0, 0), (x-4, y-12, 10, 24))
+                pygame.draw.rect(self.screen, glass_color, (x-3, y+8, 8, 4))
+
+            elif bus.facing == "W":
+                pygame.draw.rect(self.screen, (0, 0, 0), (x-13, y-5, 26, 12))
+                pygame.draw.rect(self.screen, (200, 0, 0), (x-12, y-4, 24, 10))
+                pygame.draw.rect(self.screen, glass_color, (x-11, y-3, 4, 8))
