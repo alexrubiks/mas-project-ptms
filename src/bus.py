@@ -1,15 +1,15 @@
 import heapq
 
 class Bus:
-    def __init__(self, x: int, y: int, stops) -> None:
-        self.x = x
-        self.y = y
+    def __init__(self, coords, stops, color) -> None:
+        self.x, self.y = coords
         self.stops = stops
         self.next_stop = stops[0]
         self.path = None
         self.progress = 0
         self.remaining = len(stops)
         self.facing = "N"
+        self.color = color
 
 
     def make_progress(self, speed=1):
