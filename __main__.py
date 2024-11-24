@@ -7,7 +7,7 @@ COLS = 6
 CELL_SIZE = 100
 SCREEN_WIDTH = COLS * CELL_SIZE + 360
 SCREEN_HEIGHT = ROWS * CELL_SIZE + 60
-FPS = 30
+FPS = 60
 
 
 def main():
@@ -19,9 +19,6 @@ def main():
 
     # Initialisation de la grille
     render = Render(screen, ROWS, COLS, CELL_SIZE)
-
-    # Initialisation des arrêts de bus
-    
 
     running = True
     while running:
@@ -44,8 +41,7 @@ def main():
 
         # Actions des agents
         for bus in bus_list:
-            if bus.remaining:
-                bus.make_progress(speed=1)
+            bus.behave(speed=1)
 
     pygame.quit()
 

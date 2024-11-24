@@ -1,55 +1,71 @@
 import heapq
 
 class Bus:
-    def __init__(self, coords, stops, color) -> None:
-        self.x, self.y = coords
-        self.stops = stops
-        self.next_stop = stops[0]
-        self.path = None
-        self.progress = 0
-        self.remaining = len(stops)
+    def __init__(self, stops, start_at, color) -> None:
+        # coordonnées de départ
+        self.x, self.y = stops[start_at]
+        
+        # trajet
+        self.todo = stops[start_at:]
+        self.done = stops[:start_at]
+        self.current_path = None
+        self.wait = 0
+
+        # Apparence
         self.facing = "N"
         self.color = color
 
 
-    def make_progress(self, speed=1):
-        if not self.path or self.next_stop == (self.x, self.y):
-            self.progress += 1
-            self.remaining -= 1
-            if self.progress < len(self.stops):
-                self.next_stop = self.stops[self.progress]
-                self.path = self.find_path_to_next_stop(self.next_stop)
+    def behave(self, speed=1):
+        # Est en train d'attendre
+        if self.wait > 0:
+            self.wait -= 1
+            return
+
+        # Plus d'arrêts à faire
+        if not self.todo:
+            self.todo.extend(list(reversed(self.done)))
+            self.done = []
+            return
+        
+        next_stop = self.todo[0]
+        
+        # Arrivé à un arrêt
+        if next_stop == (self.x, self.y):
+            self.current_path = None
+            self.done.append(self.todo.pop(0))
+            self.wait = 60 * 3
+            return
+
+        # Calcul de destination
+        if not self.current_path:
+            self.current_path = self.find_path_to_next_stop()
+        
+        # En cours de trajet
+        if self.current_path[0] == (self.x, self.y):
+            self.current_path.pop(0)
+
+        target_x, target_y = self.current_path[0]
+        dx = target_x - self.x
+        dy = target_y - self.y
+
+        if dx != 0:
+            if dx > 0:
+                self.facing = "E"
+                self.x += speed
             else:
-                self.path = None
-
-        if self.path:
-            target_x, target_y = self.path[0]
-            dx = target_x - self.x
-            dy = target_y - self.y
-
-            if dx != 0:
-                if dx > 0:
-                    self.facing = "E"
-                    self.x += speed
-                else:
-                    self.facing = "W"
-                    self.x -= speed
-            elif dy != 0:
-                if dy > 0:
-                    self.facing = "S"
-                    self.y += speed
-                else:
-                    self.facing = "N"
-                    self.y -= speed
-
-            if (self.x, self.y) == (target_x, target_y):
-                self.path.pop(0)
-
-        if not self.path:
-            print(f"Bus arrivé à l'arrêt : {self.next_stop}")
+                self.facing = "W"
+                self.x -= speed
+        elif dy != 0:
+            if dy > 0:
+                self.facing = "S"
+                self.y += speed
+            else:
+                self.facing = "N"
+                self.y -= speed
 
 
-    def find_path_to_next_stop(self, next_stop, max_iterations=1000):
+    def find_path_to_next_stop(self, max_iterations=1000):
         """
         Trouve le chemin le plus court sur la grille de routes vers le prochain arrêt de bus
         avec un nombre maximal d'itérations pour l'exploration.
@@ -58,7 +74,7 @@ class Bus:
         :return: Liste de coordonnées représentant le chemin.
         """
         start = (self.x, self.y)
-        goal = next_stop
+        goal = self.todo[0]
 
         open_list = []
         heapq.heappush(open_list, (0, start))
