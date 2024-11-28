@@ -1,0 +1,10 @@
+changer cases de la grille en batiments/parcs
+
+creer pietons
+    calculer trajet
+        pouvoir traverser parcs mais pas batiments
+        prendre bus
+
+bus schedules
+
+affichage heure

@@ -35,43 +35,46 @@ class Render:
             pygame.draw.line(self.screen, (200, 200, 200), start_pos, end_pos, 16)
 
 
-    def draw_bus_stops(self, bus_stops, color) -> None:
+    def draw_bus_stops(self, line) -> None:
         """
         Dessine les arrêts de bus sur la grille.
         :param bus_stops: Liste des coordonnées des arrêts de bus
         """
-        for x, y in bus_stops:
+        for x, y in line.stops:
             pygame.draw.rect(
                 self.screen,
-                color,
+                (0, 0, 0),
                 (x-11, y-11, 24, 24)
             )
             pygame.draw.rect(
                 self.screen,
                 (255, 255, 255),
-                (x-6, y-6, 14, 14)
+                (x-7, y-7, 16, 16)
             )
 
     
-    def draw_bus_path(self, bus_path, color) -> None:
+    def draw_bus_path(self, line) -> None:
         """
         Dessine le chemin du bus sur la grille.
         :param bus_stops: Liste des coordonnées de la ligne de bus
         """
 
-        for i in range(len(bus_path) - 1):
-            start_pos = (bus_path[i][0], bus_path[i][1])
-            end_pos = (bus_path[i+1][0], bus_path[i+1][1])
-            pygame.draw.line(self.screen, color, start_pos, end_pos, 10)
+        shifts = {"A": -6, "B": -3, "C": 0, "D": 3, "E": 6}
+        shift = shifts[line.name]
+
+        for i in range(len(line.path) - 1):
+            start_pos = (line.path[i][0] + shift, line.path[i][1] + shift)
+            end_pos = (line.path[i+1][0] + shift, line.path[i+1][1] + shift)
+            pygame.draw.line(self.screen, line.color, start_pos, end_pos, 7)
         
-        for x, y in bus_path:
+        for x, y in line.path:
             pygame.draw.rect(
                 self.screen,
-                color,
-                (x-4, y-4, 10, 10)
+                line.color,
+                (x - 2 + shift, y - 2 + shift, 5, 5)
             )
 
-        
+
     def draw_bus(self, bus_list):
         """
         Dessine les bus sur la carte.
@@ -100,3 +103,10 @@ class Render:
                 pygame.draw.rect(self.screen, (0, 0, 0), (x-13, y-5, 26, 12))
                 pygame.draw.rect(self.screen, bus.color, (x-12, y-4, 24, 10))
                 pygame.draw.rect(self.screen, glass_color, (x-11, y-3, 4, 8))
+
+
+    def draw_time(self, time):
+        font = pygame.font.Font(None, 74)
+        text = font.render(str(time.hours).zfill(2) + ":" + str(time.minutes).zfill(2) + ":" + str(time.seconds).zfill(2), True, (0, 0, 0))
+
+        self.screen.blit(text, (700, 100))
