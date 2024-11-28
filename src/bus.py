@@ -2,9 +2,10 @@ import heapq
 
 class Bus:
     def __init__(self, stops, start_at, color) -> None:
-        # coordonnées de départ
+        # caracteristiques
         self.x, self.y = stops[start_at]
-        
+        self.speed = 6
+
         # trajet
         self.todo = stops[start_at:]
         self.done = stops[:start_at]
@@ -16,7 +17,7 @@ class Bus:
         self.color = color
 
 
-    def behave(self, speed=1):
+    def behave(self):
         # Est en train d'attendre
         if self.wait > 0:
             self.wait -= 1
@@ -34,35 +35,47 @@ class Bus:
         if next_stop == (self.x, self.y):
             self.current_path = None
             self.done.append(self.todo.pop(0))
-            self.wait = 60 * 3
+            self.wait = 20
             return
 
         # Calcul de destination
         if not self.current_path:
             self.current_path = self.find_path_to_next_stop()
-        
+
         # En cours de trajet
-        if self.current_path[0] == (self.x, self.y):
-            self.current_path.pop(0)
+        left = self.speed
+        while left:
+            if self.current_path[0] == (self.x, self.y):
+                self.current_path.pop(0)
+                if not self.current_path:
+                    return
 
-        target_x, target_y = self.current_path[0]
-        dx = target_x - self.x
-        dy = target_y - self.y
+            target_x, target_y = self.current_path[0]
+            dx = target_x - self.x
+            dy = target_y - self.y
 
-        if dx != 0:
-            if dx > 0:
-                self.facing = "E"
-                self.x += speed
-            else:
-                self.facing = "W"
-                self.x -= speed
-        elif dy != 0:
-            if dy > 0:
-                self.facing = "S"
-                self.y += speed
-            else:
-                self.facing = "N"
-                self.y -= speed
+            if dx != 0:
+                if dx > 0:
+                    self.facing = "E"
+                    self.x += min(left, dx)
+                    left -= min(left, dx)
+
+                else:
+                    self.facing = "W"
+                    self.x -= min(left, -dx)
+                    left -= min(left, -dx)
+            
+            elif dy != 0:
+                if dy > 0:
+                    self.facing = "S"
+                    self.y += min(left, dy)
+                    left -= min(left, dy)
+
+                else:
+                    self.facing = "N"
+                    self.y -= min(left, -dy)
+                    left -= min(left, -dy)
+
 
 
     def find_path_to_next_stop(self, max_iterations=1000):

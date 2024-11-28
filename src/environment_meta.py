@@ -1,6 +1,14 @@
 # meta
-# vitesse pieton = ~4.5 km/h = ~1.2 m/s = 0.5 pixel/s
+
 # pixel = 2.4 m
+
+# vitesse pieton = ~4.5 km/h
+#                = ~1.2 m/s
+#                =  0.5 pixel/s
+
+# vitesse max bus = 50 km/h
+#                 = 14 m/s
+#                 = 6 pixels/s
 
 # distance bloc             = 240 m  = 3 min 20
 # distance largeur          = 1440 m = ~20 min

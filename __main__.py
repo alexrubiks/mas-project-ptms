@@ -8,7 +8,7 @@ COLS = 6
 CELL_SIZE = 100
 SCREEN_WIDTH = COLS * CELL_SIZE + 360
 SCREEN_HEIGHT = ROWS * CELL_SIZE + 60
-FPS = 60
+FPS = 20
 
 
 def main():
@@ -44,7 +44,7 @@ def main():
 
         # Actions des agents
         for bus in bus_list:
-            bus.behave(speed=1)
+            bus.behave()
         meta.tick()
 
     pygame.quit()
