@@ -31,7 +31,7 @@ def main():
 
         # Affichage des éléments à l'écran
         screen.fill((255, 255, 255))
-        render.draw_grid(30, 30)
+        render.draw_grid(30, 30, meta)
         for line in bus_lines:
             render.draw_bus_path(line)
             render.draw_bus_stops(line)

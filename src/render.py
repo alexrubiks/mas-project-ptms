@@ -17,10 +17,19 @@ class Render:
         self.cell_size = cell_size
 
 
-    def draw_grid(self, x: int, y: int) -> None:
+    def draw_grid(self, x: int, y: int, meta) -> None:
         """
         Dessine la grille représentant la ville.
         """
+
+        # Dessiner les batiments/parcs
+        for j, row in enumerate(meta.batiments):
+            for i, batiment in enumerate(row):
+                if batiment:
+                    pygame.draw.rect(self.screen, (230, 230, 230), (x+100*i, y+100*j, 100, 100))
+                else:
+                    pygame.draw.rect(self.screen, (148, 255, 141), (x+100*i, y+100*j, 100, 100))
+
 
         # Dessiner les lignes horizontales
         for row in range(self.rows + 1):
