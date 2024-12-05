@@ -23,9 +23,9 @@ class Render:
         """
 
         # Dessiner les batiments/parcs
-        for j, row in enumerate(meta.batiments):
-            for i, batiment in enumerate(row):
-                if batiment:
+        for j, row in enumerate(meta.buildings):
+            for i, buildings in enumerate(row):
+                if buildings:
                     pygame.draw.rect(self.screen, (230, 230, 230), (x+100*i, y+100*j, 100, 100))
                 else:
                     pygame.draw.rect(self.screen, (148, 255, 141), (x+100*i, y+100*j, 100, 100))
@@ -112,6 +112,20 @@ class Render:
                 pygame.draw.rect(self.screen, (0, 0, 0), (x-13, y-5, 26, 12))
                 pygame.draw.rect(self.screen, bus.color, (x-12, y-4, 24, 10))
                 pygame.draw.rect(self.screen, glass_color, (x-11, y-3, 4, 8))
+    
+
+    def draw_destination(self, co):
+        pygame.draw.circle(self.screen, (0, 255, 255), co, 4)
+    
+    def draw_path_p(self, path):
+        for co in path:
+            pygame.draw.circle(self.screen, (0, 0, 0), co, 1)
+
+    
+
+    def draw_pedestrian(self, pedestrian_list):
+        for pedestrian in pedestrian_list:
+            pygame.draw.circle(self.screen, (0, 150, 0), (pedestrian.x, pedestrian.y), 4)
 
 
     def draw_time(self, time):

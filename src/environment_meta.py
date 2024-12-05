@@ -23,7 +23,7 @@ class EnvironmentMeta:
         self.seconds = 0
 
         # ville
-        self.rues_horizontales = [
+        self.horizontal_roads = [
             [1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1],
@@ -32,7 +32,7 @@ class EnvironmentMeta:
             [1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1],
         ]
-        self.rues_verticales = [
+        self.vertical_roads = [
             [1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1],
@@ -40,7 +40,7 @@ class EnvironmentMeta:
             [1, 1, 1, 1, 1, 1, 1],
             [1, 1, 1, 1, 1, 1, 1],
         ]
-        self.batiments = [
+        self.buildings = [
             [0, 1, 0, 0, 1, 1],
             [0, 1, 1, 1, 0, 0],
             [0, 1, 0, 1, 1, 0],
@@ -48,6 +48,9 @@ class EnvironmentMeta:
             [1, 1, 0, 0, 1, 0],
             [0, 1, 1, 0, 1, 1],
         ]
+
+        self.walk_area = set()
+        self.precalculate_walk_areas()
 
 
     def tick(self):
@@ -60,3 +63,45 @@ class EnvironmentMeta:
         if self.minutes == 60:
             self.hours += 1
             self.minutes = 0
+
+
+    def precalculate_walk_areas(self):
+        # Ajouter les zones marchables pour les routes horizontales
+        for i, line in enumerate(self.horizontal_roads):
+            for j, street in enumerate(line):
+                if street:
+                    left   = 30 + j*100 - 10
+                    right  = 30 + (j+1)*100 + 10
+                    top    = 30 + i*100 - 10
+                    bottom = 30 + i*100 + 10
+                    for x in range(left, right + 1):
+                        for y in range(top, bottom + 1):
+                            self.walk_area.add((x, y))
+
+        # Ajouter les zones marchables pour les routes verticales
+        for i, line in enumerate(self.vertical_roads):
+            for j, street in enumerate(line):
+                if street:
+                    left   = 30 + j*100 - 10
+                    right  = 30 + j*100 + 10
+                    top    = 30 + i*100 - 10
+                    bottom = 30 + (i+1)*100 + 10
+                    for x in range(left, right + 1):
+                        for y in range(top, bottom + 1):
+                            self.walk_area.add((x, y))
+
+        # Ajouter les jardins publics
+        for i, line in enumerate(self.buildings):
+            for j, bloc in enumerate(line):
+                if not bloc:
+                    left   = 30 + j*100 + 8
+                    right  = 30 + (j+1)*100 - 8
+                    top    = 30 + i*100 + 8
+                    bottom = 30 + (i+1)*100 - 8
+                    for x in range(left, right + 1):
+                        for y in range(top, bottom + 1):
+                            self.walk_area.add((x, y))
+
+    
+    def is_walk_area(self, x, y) -> bool:
+        return (x, y) in self.walk_area
