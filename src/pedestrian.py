@@ -14,6 +14,7 @@ class Pedestrian:
     def behave(self, is_walk_area):
         if not self.path:
             self.path = self.find_path_to_destination(is_walk_area)
+        self.move()
 
 
     def find_path_to_destination(self, is_walk_area):
@@ -70,3 +71,9 @@ class Pedestrian:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
         return None  # Pas de chemin trouvé
+
+    def move(self):
+        if self.path:
+            self.x, self.y = self.path.pop(0)
+        else:
+            self.x, self.y = self.destination

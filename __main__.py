@@ -69,9 +69,6 @@ def main():
                 executor.submit(thread_target, pedestrian, meta.is_walk_area)
 
 
-
-
-
         end_time = time.time()  # Enregistre l'heure de fin
         print(f"Temps d'exécution : {end_time - start_time:.4f} secondes")
         meta.tick()
