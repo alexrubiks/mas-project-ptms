@@ -118,8 +118,10 @@ class Render:
         pygame.draw.circle(self.screen, (0, 255, 255), co, 4)
     
     def draw_path_p(self, path):
-        for co in path:
-            pygame.draw.circle(self.screen, (0, 0, 0), co, 1)
+        for i in range(len(path) - 1):
+            start_pos = (path[i][0], path[i][1])
+            end_pos = (path[i+1][0], path[i+1][1])
+            pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos, 2)
 
     
 

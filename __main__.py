@@ -52,21 +52,18 @@ def main():
 
         start_time = time.time()  # Enregistre l'heure de départ
 
+        for pepe in pedestrian_list:
+            pepe.behave(meta.is_walk_area)
 
+        # from concurrent.futures import ThreadPoolExecutor
 
+        # def thread_target(pedestrian, is_walk_area_func):
+        #     pedestrian.behave(is_walk_area_func)
 
-        # for pedestrian in pedestrian_list:
-        #     pedestrian.behave(meta.is_walk_area)
-
-        from concurrent.futures import ThreadPoolExecutor
-
-        def thread_target(pedestrian, is_walk_area_func):
-            pedestrian.behave(is_walk_area_func)
-
-        # Utiliser un pool de threads pour gérer les tâches
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            for pedestrian in pedestrian_list:
-                executor.submit(thread_target, pedestrian, meta.is_walk_area)
+        # # Utiliser un pool de threads pour gérer les tâches
+        # with ThreadPoolExecutor(max_workers=10) as executor:
+        #     for pedestrian in pedestrian_list:
+        #         executor.submit(thread_target, pedestrian, meta.is_walk_area)
 
 
         end_time = time.time()  # Enregistre l'heure de fin

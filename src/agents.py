@@ -63,7 +63,7 @@ bus_list = []
 
 pedestrian_list = []
 
-for _ in range(30):
+for _ in range(3):
     while not meta.is_walk_area(x := randint(0, 700), y := randint(0, 700)):
         pass
     while not meta.is_walk_area(x_dest := randint(0, 700), y_dest := randint(0, 700)):
