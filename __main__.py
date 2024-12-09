@@ -1,14 +1,14 @@
 import pygame
+from concurrent.futures import ThreadPoolExecutor
 from src.render import Render
-from src.agents import meta, bus_list, bus_lines, pedestrian_list
-from src.pedestrian import Pedestrian
+from src.agents import meta, bus_list, bus_lines, pedestrian_list, event_checker
 
 ROWS = 6
 COLS = 6
 CELL_SIZE = 100
 SCREEN_WIDTH = COLS * CELL_SIZE + 360
 SCREEN_HEIGHT = ROWS * CELL_SIZE + 60
-FPS = 20
+FPS = 60
 
 
 def main():
@@ -21,6 +21,7 @@ def main():
     # Initialisation de la grille
     render = Render(screen, ROWS, COLS, CELL_SIZE)
 
+    average_duration = None
     running = True
     while running:
         # Gestion des événements
@@ -36,10 +37,8 @@ def main():
             render.draw_bus_stops(line)
         render.draw_bus(bus_list)
         render.draw_time(meta)
+        render.draw_duration(average_duration)
         render.draw_pedestrian(pedestrian_list)
-        for pede in pedestrian_list:
-            render.draw_destination(pede.destination)
-            render.draw_path_p(pede.path)
 
         # Actualisation de l'affichage
         pygame.display.flip()
@@ -51,23 +50,23 @@ def main():
         import time
 
         start_time = time.time()  # Enregistre l'heure de départ
+        event_checker()
 
-        for pepe in pedestrian_list:
-            pepe.behave(meta.is_walk_area)
+        def thread_target(pedestrian, is_walk_area_func):
+            if not pedestrian.behave(is_walk_area_func):
+                pedestrian_list.remove(pedestrian)
 
-        # from concurrent.futures import ThreadPoolExecutor
-
-        # def thread_target(pedestrian, is_walk_area_func):
-        #     pedestrian.behave(is_walk_area_func)
-
-        # # Utiliser un pool de threads pour gérer les tâches
-        # with ThreadPoolExecutor(max_workers=10) as executor:
-        #     for pedestrian in pedestrian_list:
-        #         executor.submit(thread_target, pedestrian, meta.is_walk_area)
-
+        # Utiliser un pool de threads pour gérer les tâches
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            for pedestrian in pedestrian_list:
+                executor.submit(thread_target, pedestrian, meta.is_walk_area)
 
         end_time = time.time()  # Enregistre l'heure de fin
-        print(f"Temps d'exécution : {end_time - start_time:.4f} secondes")
+        if end_time - start_time > 0.05:
+            print(f"Temps d'exécution : {end_time - start_time:.4f} secondes")
+
+        if average_duration is None:
+            average_duration = int(sum([p.duration for p in pedestrian_list]) / len(pedestrian_list)) if pedestrian_list else 0
         meta.tick()
 
     pygame.quit()

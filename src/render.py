@@ -117,17 +117,18 @@ class Render:
     def draw_destination(self, co):
         pygame.draw.circle(self.screen, (0, 255, 255), co, 4)
     
+    
     def draw_path_p(self, path):
         for i in range(len(path) - 1):
             start_pos = (path[i][0], path[i][1])
             end_pos = (path[i+1][0], path[i+1][1])
+            pygame.draw.circle(self.screen, (0, 0, 0), end_pos, 4)
             pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos, 2)
 
     
-
     def draw_pedestrian(self, pedestrian_list):
         for pedestrian in pedestrian_list:
-            pygame.draw.circle(self.screen, (0, 150, 0), (pedestrian.x, pedestrian.y), 4)
+            pygame.draw.circle(self.screen, (165, 42, 42), (pedestrian.x, pedestrian.y), 4)
 
 
     def draw_time(self, time):
@@ -135,3 +136,25 @@ class Render:
         text = font.render(str(time.hours).zfill(2) + ":" + str(time.minutes).zfill(2) + ":" + str(time.seconds).zfill(2), True, (0, 0, 0))
 
         self.screen.blit(text, (700, 100))
+    
+
+    def draw_duration(self, duration):
+        font = pygame.font.Font(None, 30)
+        if duration is not None:
+            hours, remainder = divmod(duration, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            time_str = f"{str(hours).zfill(2)}:{str(minutes).zfill(2)}:{str(seconds).zfill(2)}"
+        else:
+            time_str = "--:--:--"
+
+        text = f"Temps de trajet moyen :\n{time_str}"
+        self.render_multiline_text(self.screen, text, font, (0, 0, 0), 700, 300)
+    
+
+    def render_multiline_text(self, surface, text, font, color, x, y, line_spacing=5):
+
+        lines = text.split('\n')
+        for i, line in enumerate(lines):
+            rendered_line = font.render(line, True, color)
+            surface.blit(rendered_line, (x, y + i * (rendered_line.get_height() + line_spacing)))
+

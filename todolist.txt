@@ -1,10 +1,6 @@
-changer cases de la grille en batiments/parcs
+prendre bus
 
-creer pietons
-    calculer trajet
-        pouvoir traverser parcs mais pas batiments
-        prendre bus
-
+recalculer correctement le temps de trajet moyen
 bus schedules
 
-affichage heure
+comparer temps de trajet
