@@ -39,6 +39,9 @@ def main():
         render.draw_time(meta)
         render.draw_duration(average_duration)
         render.draw_pedestrian(pedestrian_list)
+        for pedestrian in pedestrian_list:
+            render.draw_destination((pedestrian.destination[0], pedestrian.destination[1]))
+            render.draw_path_p(pedestrian.path)
 
         # Actualisation de l'affichage
         pygame.display.flip()
@@ -52,21 +55,23 @@ def main():
         start_time = time.time()  # Enregistre l'heure de départ
         event_checker()
 
-        def thread_target(pedestrian, is_walk_area_func):
-            if not pedestrian.behave(is_walk_area_func):
-                pedestrian_list.remove(pedestrian)
+        for pedestrian in pedestrian_list:
+            pedestrian.behave(meta.is_walk_area)
 
-        # Utiliser un pool de threads pour gérer les tâches
-        with ThreadPoolExecutor(max_workers=10) as executor:
-            for pedestrian in pedestrian_list:
-                executor.submit(thread_target, pedestrian, meta.is_walk_area)
+        # def thread_target(pedestrian, is_walk_area_func):
+        #     if not pedestrian.behave(is_walk_area_func):
+        #         pedestrian_list.remove(pedestrian)
+
+        # with ThreadPoolExecutor(max_workers=10) as executor:
+        #     for pedestrian in pedestrian_list:
+        #         executor.submit(thread_target, pedestrian, meta.is_walk_area)
 
         end_time = time.time()  # Enregistre l'heure de fin
         if end_time - start_time > 0.05:
             print(f"Temps d'exécution : {end_time - start_time:.4f} secondes")
 
-        if average_duration is None:
-            average_duration = int(sum([p.duration for p in pedestrian_list]) / len(pedestrian_list)) if pedestrian_list else 0
+        # if average_duration is None:
+        #     average_duration = int(sum([p.duration for p in pedestrian_list]) / len(pedestrian_list)) if pedestrian_list else 0
         meta.tick()
 
     pygame.quit()

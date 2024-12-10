@@ -105,3 +105,52 @@ class EnvironmentMeta:
     
     def is_walk_area(self, x, y) -> bool:
         return (x, y) in self.walk_area
+    
+
+    def get_points_between(self, p1, p2):
+        x1, y1 = p1
+        x2, y2 = p2
+
+        dx = (x2 - x1) / 14
+        dy = (y2 - y1) / 14
+
+        points = [(int(x1 + i * dx), int(y1 + i * dy)) for i in range(15)]
+        return points
+
+
+    def is_crossable(self, p1, p2):
+        return all(self.is_walk_area(p[0], p[1]) for p in self.get_points_between(p1, p2))
+    
+    
+    def pedestrian_graph(self):
+        nodes = []
+        for i in range(6):
+            for j in range(6):
+                nodes.append((30 + j*100 + 10, 30 + i*100 + 10))
+                nodes.append((30 + j*100 + 90, 30 + i*100 + 10))
+                nodes.append((30 + j*100 + 10, 30 + i*100 + 90))
+                nodes.append((30 + j*100 + 90, 30 + i*100 + 90))
+
+        # creer graphe avec les noeuds et des poids (poids = distance euclidienne * 2)
+        # liaisons uniquement entre les noeuds adjacents horizontaux et verticaux, et diagonales si la condition is_crossable est vraie entre les deux noeuds
+        graph = {}
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        for i, node1 in enumerate(nodes):
+            graph[node1] = {}
+            for j, node2 in enumerate(nodes):
+                if i == j:
+                    continue
+                for direction in directions:
+                    if node2 == (node1[0] + direction[0]*20, node1[1] + direction[1]*20):
+                        graph[node1][node2] = 20 * 2
+                        continue
+                    elif node2 == (node1[0] + direction[0]*80, node1[1] + direction[1]*80):
+                        graph[node1][node2] = 80 * 2
+                        continue
+                if node1[0] != node2[0] and node1[1] != node2[1]:
+                    if self.is_crossable(node1, node2):
+                        graph[node1][node2] = ((node2[0] - node1[0])**2 + (node2[1] - node1[1])**2)**0.5 * 2
+        
+        return graph
+        
+        
