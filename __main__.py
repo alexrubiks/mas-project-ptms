@@ -42,8 +42,8 @@ def main():
         #graph = generate_pedestrian()
         # render.draw_graph(graph)
         for pedestrian in pedestrian_list:
-            render.draw_destination((pedestrian.destination[0], pedestrian.destination[1]))
             render.draw_path_p(pedestrian.path)
+            render.draw_destination((pedestrian.destination[0], pedestrian.destination[1]))
 
         # Actualisation de l'affichage
         pygame.display.flip()
@@ -58,7 +58,8 @@ def main():
         event_checker()
 
         for pedestrian in pedestrian_list:
-            pedestrian.behave()
+            if not pedestrian.behave():
+                pedestrian_list.remove(pedestrian)
 
         # def thread_target(pedestrian):
         #     if not pedestrian.behave():

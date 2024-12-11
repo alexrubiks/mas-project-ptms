@@ -122,8 +122,9 @@ class Render:
         for i in range(len(path) - 1):
             start_pos = (path[i][0], path[i][1])
             end_pos = (path[i+1][0], path[i+1][1])
-            pygame.draw.circle(self.screen, (0, 0, 0), end_pos, 4)
             pygame.draw.line(self.screen, (0, 0, 0), start_pos, end_pos, 2)
+            if i < len(path) - 2:
+                pygame.draw.circle(self.screen, (0, 0, 0), end_pos, 4)
 
     
     def draw_pedestrian(self, pedestrian_list):
@@ -158,7 +159,6 @@ class Render:
         for node1 in graph:
             for node2 in graph[node1]:
                 pygame.draw.line(self.screen, (50, 50, 50), node1, node2, 1)
-
 
 
     def render_multiline_text(self, surface, text, font, color, x, y, line_spacing=5):

@@ -12,10 +12,11 @@ meta = EnvironmentMeta()
 
 ### Buses ###
 
-# A_line_stops = [(100, 30), (300, 30), (430, 100), (430, 200), (530, 260), (530, 500), (260, 530)]
-# A_line_path = [(100, 30), (430, 30), (430, 230), (530, 230), (530, 530), (260, 530)]
-# A_line_bus_color = (200, 0, 0)
-# A_line_path_color = (255, 0, 0)
+A_line_stops = [(100, 30), (300, 30), (430, 100), (430, 200), (530, 260), (530, 500), (260, 530)]
+A_line_path = [(100, 30), (430, 30), (430, 230), (530, 230), (530, 530), (260, 530)]
+A_line_costs = [33, 33, 17, 27, 40, 50]
+A_line_bus_color = (200, 0, 0)
+A_line_path_color = (255, 0, 0)
 
 # B_line_stops = [(630, 80), (430, 200), (360, 230), (230, 280), (130, 360), (130, 500), (30, 600)]
 # B_line_path = [(630, 80), (630, 130), (430, 130), (430, 230), (230, 230), (230, 330), (130, 330), (130, 530), (130, 530), (30, 530), (30, 600)]
@@ -38,7 +39,7 @@ meta = EnvironmentMeta()
 # E_line_path_color = (200, 0, 200)
 
 bus_lines = []
-# bus_lines.append(BusLine("A", A_line_path, A_line_stops, A_line_path_color))
+bus_lines.append(BusLine("A", A_line_path, A_line_stops, A_line_costs, A_line_path_color))
 # bus_lines.append(BusLine("B", B_line_path, B_line_stops, B_line_path_color))
 # bus_lines.append(BusLine("C", C_line_path, C_line_stops, C_line_path_color))
 # bus_lines.append(BusLine("D", D_line_path, D_line_stops, D_line_path_color))
@@ -76,31 +77,32 @@ def generate_pedestrian():
         pass
     while not meta.is_walk_area(x_dest := randint(0, 700), y_dest := randint(0, 700)):
         pass
-    pedestrian_graph = meta.add_ends_to_graph(grid_graph, (x, y), (x_dest, y_dest))
-    pedestrian_list.append(Pedestrian(x, y, (x_dest, y_dest), pedestrian_graph))
-    return pedestrian_graph
+    p_graph = meta.add_bus_lines_to_graph(grid_graph, bus_lines)
+    full_graph = meta.add_ends_to_graph(p_graph, (x, y), (x_dest, y_dest))
+    pedestrian_list.append(Pedestrian(x, y, (x_dest, y_dest), full_graph))
+    return p_graph
 
 
 ### Events ###
 
 events = {
-    # (6, 3, 0): "pedestrian",
-    # (6, 5, 0): "pedestrian",
-    # (6, 8, 0): "pedestrian",
-    # (6, 13, 0): "pedestrian",
-    # (6, 15, 0): "pedestrian",
-    # (6, 18, 0): "pedestrian",
-    # (6, 23, 0): "pedestrian",
-    # (6, 25, 0): "pedestrian",
-    # (6, 28, 0): "pedestrian",
-    # (6, 33, 0): "pedestrian",
-    # (6, 35, 0): "pedestrian",
-    # (6, 38, 0): "pedestrian",
+    (6, 3, 0): "pedestrian",
+    (6, 5, 0): "pedestrian",
+    (6, 8, 0): "pedestrian",
+    (6, 13, 0): "pedestrian",
+    (6, 15, 0): "pedestrian",
+    (6, 18, 0): "pedestrian",
+    (6, 23, 0): "pedestrian",
+    (6, 25, 0): "pedestrian",
+    (6, 28, 0): "pedestrian",
+    (6, 33, 0): "pedestrian",
+    (6, 35, 0): "pedestrian",
+    (6, 38, 0): "pedestrian",
 }
 
 def event_checker():
-    if (meta.hours, meta.minutes, meta.seconds) == (8, 0, 0):
-        for _ in range(1):
+    if (meta.hours, meta.minutes, meta.seconds) == (6, 0, 0):
+        for _ in range(150):
             generate_pedestrian()
 
     if (meta.hours, meta.minutes, meta.seconds) in events:

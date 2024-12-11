@@ -1,3 +1,5 @@
+import math
+
 # meta
 
 # pixel = 2.4 m
@@ -147,49 +149,40 @@ class EnvironmentMeta:
                         continue
                 if node1[0] != node2[0] and node1[1] != node2[1]:
                     if self.is_crossable(node1, node2):
-                        graph[node1][node2] = ((node2[0] - node1[0])**2 + (node2[1] - node1[1])**2)**0.5 * 2
+                        graph[node1][node2] = math.dist(node1, node2) * 2
         
         return graph
-    
+        
+
+    def add_bus_lines_to_graph(self, graph, bus_lines):
+        for line in bus_lines:
+            for stop in line.stops:
+                if stop in graph:
+                    continue
+                graph[stop] = {}
+                for node in graph:
+                    if node == stop:
+                        continue
+                    if self.is_crossable(stop, node):
+                        distance = math.dist(node, stop) * 2
+                        graph[stop][node] = distance
+                        graph[node][stop] = distance
+            for i in range(len(line.stops)-1):
+                graph[line.stops[i]][line.stops[i+1]] = line.costs[i]
+                graph[line.stops[i+1]][line.stops[i]] = line.costs[i]
+
+        return graph
+
+
     def add_ends_to_graph(self, graph, start, end):
-
-        graph[start] = {}
-        graph[end] = {}
-        
-        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-        
-        for node in graph:
-            if node == start:
-                continue
-            for direction in directions:
-                if node == (start[0] + direction[0]*20, start[1] + direction[1]*20):
-                    graph[start][node] = 20 * 2
+        for new in [start, end]:
+            graph[new] = {}
+            for node in graph:
+                if node == new:
                     continue
-                elif node == (start[0] + direction[0]*80, start[1] + direction[1]*80):
-                    graph[start][node] = 80 * 2
-                    continue
-            if start[0] != node[0] and start[1] != node[1]:
-                if self.is_crossable(start, node):
-                    graph[start][node] = ((node[0] - start[0])**2 + (node[1] - start[1])**2)**0.5 * 2
-
-        for node in graph:
-            if node == end:
-                continue
-            for direction in directions:
-                if node == (end[0] + direction[0]*20, end[1] + direction[1]*20):
-                    graph[end][node] = 20 * 2
-                    continue
-                elif node == (end[0] + direction[0]*80, end[1] + direction[1]*80):
-                    graph[end][node] = 80 * 2
-                    continue
-            if end[0] != node[0] and end[1] != node[1]:
-                if self.is_crossable(end, node):
-                    graph[end][node] = ((node[0] - end[0])**2 + (node[1] - end[1])**2)**0.5 * 2
-
+                if self.is_crossable(new, node):
+                    distance = math.dist(node, new) * 2
+                    graph[new][node] = distance
+                    graph[node][new] = distance
 
         return graph
-
-
-
-        
-        
