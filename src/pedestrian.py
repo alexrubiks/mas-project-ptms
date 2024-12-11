@@ -8,6 +8,7 @@ class Pedestrian:
         self.y = y
         self.destination = destination
         self.speed = 0.5
+        self.on_bus = None
 
         # trajet
         self.path = []
@@ -20,7 +21,6 @@ class Pedestrian:
         if not self.path:
             self.duration, self.path = self.find_path_to_destination((self.x, self.y), self.destination, self.graph)
             self.todo = self.path.copy()
-            print(self.duration)
         
         if not self.todo:
             return False

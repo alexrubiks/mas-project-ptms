@@ -113,10 +113,10 @@ class EnvironmentMeta:
         x1, y1 = p1
         x2, y2 = p2
 
-        dx = (x2 - x1) / 14
-        dy = (y2 - y1) / 14
+        dx = (x2 - x1) / 29
+        dy = (y2 - y1) / 29
 
-        points = [(int(x1 + i * dx), int(y1 + i * dy)) for i in range(15)]
+        points = [(int(x1 + i * dx), int(y1 + i * dy)) for i in range(30)]
         return points
 
 

@@ -39,11 +39,9 @@ def main():
         render.draw_time(meta)
         render.draw_duration(average_duration)
         render.draw_pedestrian(pedestrian_list)
-        #graph = generate_pedestrian()
-        # render.draw_graph(graph)
-        for pedestrian in pedestrian_list:
-            render.draw_path_p(pedestrian.path)
-            render.draw_destination((pedestrian.destination[0], pedestrian.destination[1]))
+        # for pedestrian in pedestrian_list:
+        #     render.draw_path_p(pedestrian.path)
+        #     render.draw_destination((pedestrian.destination[0], pedestrian.destination[1]))
 
         # Actualisation de l'affichage
         pygame.display.flip()

@@ -7,8 +7,8 @@ class Bus:
         self.speed = 6
 
         # trajet
-        self.todo = stops[start_at:]
-        self.done = stops[:start_at]
+        self.todo = stops[start_at+1:]
+        self.done = stops[:start_at+1]
         self.current_path = None
         self.wait = 0
 
@@ -35,7 +35,7 @@ class Bus:
         if next_stop == (self.x, self.y):
             self.current_path = None
             self.done.append(self.todo.pop(0))
-            self.wait = 20
+            self.wait = 30
             return
 
         # Calcul de destination
