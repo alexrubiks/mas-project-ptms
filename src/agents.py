@@ -7,6 +7,7 @@ from .environment_meta import EnvironmentMeta
 
 ### Meta ###
 
+seed(1)
 meta = EnvironmentMeta()
 
 ### Buses ###
@@ -66,37 +67,40 @@ bus_list = []
 
 ### Pedestrians ###
 
-pedestrian_graph = meta.pedestrian_graph()
+grid_graph = meta.pedestrian_graph()
 
 pedestrian_list = []
-
-seed(1)
 
 def generate_pedestrian():
     while not meta.is_walk_area(x := randint(0, 700), y := randint(0, 700)):
         pass
     while not meta.is_walk_area(x_dest := randint(0, 700), y_dest := randint(0, 700)):
         pass
+    pedestrian_graph = meta.add_ends_to_graph(grid_graph, (x, y), (x_dest, y_dest))
     pedestrian_list.append(Pedestrian(x, y, (x_dest, y_dest), pedestrian_graph))
+    return pedestrian_graph
+
+
+### Events ###
 
 events = {
-    (6, 3, 0): "pedestrian",
-    (6, 5, 0): "pedestrian",
-    (6, 8, 0): "pedestrian",
-    (6, 13, 0): "pedestrian",
-    (6, 15, 0): "pedestrian",
-    (6, 18, 0): "pedestrian",
-    (6, 23, 0): "pedestrian",
-    (6, 25, 0): "pedestrian",
-    (6, 28, 0): "pedestrian",
-    (6, 33, 0): "pedestrian",
-    (6, 35, 0): "pedestrian",
-    (6, 38, 0): "pedestrian",
+    # (6, 3, 0): "pedestrian",
+    # (6, 5, 0): "pedestrian",
+    # (6, 8, 0): "pedestrian",
+    # (6, 13, 0): "pedestrian",
+    # (6, 15, 0): "pedestrian",
+    # (6, 18, 0): "pedestrian",
+    # (6, 23, 0): "pedestrian",
+    # (6, 25, 0): "pedestrian",
+    # (6, 28, 0): "pedestrian",
+    # (6, 33, 0): "pedestrian",
+    # (6, 35, 0): "pedestrian",
+    # (6, 38, 0): "pedestrian",
 }
 
 def event_checker():
-    if (meta.hours, meta.minutes, meta.seconds) == (6, 0, 0):
-        for i in range(1):
+    if (meta.hours, meta.minutes, meta.seconds) == (8, 0, 0):
+        for _ in range(1):
             generate_pedestrian()
 
     if (meta.hours, meta.minutes, meta.seconds) in events:

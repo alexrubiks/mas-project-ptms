@@ -1,7 +1,7 @@
 import pygame
 from concurrent.futures import ThreadPoolExecutor
 from src.render import Render
-from src.agents import meta, bus_list, bus_lines, pedestrian_list, event_checker
+from src.agents import meta, bus_list, bus_lines, pedestrian_list, event_checker, generate_pedestrian
 
 ROWS = 6
 COLS = 6
@@ -39,6 +39,8 @@ def main():
         render.draw_time(meta)
         render.draw_duration(average_duration)
         render.draw_pedestrian(pedestrian_list)
+        #graph = generate_pedestrian()
+        # render.draw_graph(graph)
         for pedestrian in pedestrian_list:
             render.draw_destination((pedestrian.destination[0], pedestrian.destination[1]))
             render.draw_path_p(pedestrian.path)
@@ -56,15 +58,15 @@ def main():
         event_checker()
 
         for pedestrian in pedestrian_list:
-            pedestrian.behave(meta.is_walk_area)
+            pedestrian.behave()
 
-        # def thread_target(pedestrian, is_walk_area_func):
-        #     if not pedestrian.behave(is_walk_area_func):
+        # def thread_target(pedestrian):
+        #     if not pedestrian.behave():
         #         pedestrian_list.remove(pedestrian)
 
         # with ThreadPoolExecutor(max_workers=10) as executor:
         #     for pedestrian in pedestrian_list:
-        #         executor.submit(thread_target, pedestrian, meta.is_walk_area)
+        #         executor.submit(thread_target, pedestrian)
 
         end_time = time.time()  # Enregistre l'heure de fin
         if end_time - start_time > 0.05:

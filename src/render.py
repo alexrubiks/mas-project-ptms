@@ -149,7 +149,17 @@ class Render:
 
         text = f"Temps de trajet moyen :\n{time_str}"
         self.render_multiline_text(self.screen, text, font, (0, 0, 0), 700, 300)
-    
+
+
+    def draw_graph(self, graph):
+        for node in graph:
+            pygame.draw.circle(self.screen, (50, 50, 50), node, 4)
+        
+        for node1 in graph:
+            for node2 in graph[node1]:
+                pygame.draw.line(self.screen, (50, 50, 50), node1, node2, 1)
+
+
 
     def render_multiline_text(self, surface, text, font, color, x, y, line_spacing=5):
 
@@ -158,3 +168,4 @@ class Render:
             rendered_line = font.render(line, True, color)
             surface.blit(rendered_line, (x, y + i * (rendered_line.get_height() + line_spacing)))
 
+    

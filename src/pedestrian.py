@@ -16,9 +16,9 @@ class Pedestrian:
         self.duration = None
 
 
-    def behave(self, is_walk_area):
+    def behave(self):
         if not self.path:
-            self.duration, self.path = self.find_path_to_destination(is_walk_area)
+            self.duration, self.path = self.find_path_to_destination((self.x, self.y), self.destination, self.graph)
             self.todo = self.path.copy()
             print(self.duration)
         
@@ -51,38 +51,7 @@ class Pedestrian:
         return True
 
 
-    def find_path_to_destination(self, is_walk_area):
-        start = (self.x, self.y)
-        end = self.destination
-
-        key_start = self.find_closest_point(start)
-        key_end = self.find_closest_point(end)
-
-        cost, path = self.shortest_path(key_start, key_end, self.graph)
-        path = [start] + path + [end]
-        cost += math.dist(start, path[1]) + math.dist(path[-2], end)
-        cost, path = self.optimize_ends(path, cost, is_walk_area)
-        
-        return int(cost), path
-    
-
-    def optimize_ends(self, path, cost, is_walk_area):
-        if len(path) > 2:
-            if is_crossable(path[0], path[2]):
-                cost -= math.dist(path[0], path[1]) + math.dist(path[1], path[2])
-                path.pop(1)
-                cost += math.dist(path[0], path[1])
-
-        if len(path) > 2:
-            if is_crossable(path[-1], path[-3]):
-                cost -= math.dist(path[-1], path[-2]) + math.dist(path[-2], path[-3])
-                path.pop(-2)
-                cost += math.dist(path[-2], path[-1])
-
-        return cost, path
-    
-
-    def shortest_path(self, start, end, graph):
+    def find_path_to_destination(self, start, end, graph):
         pq = [] # Priority Queue
         heapq.heappush(pq, (0, start))  # (coût, nœud)
         distances = {node: float('inf') for node in graph}  # Distance du nœud au start
@@ -114,9 +83,4 @@ class Pedestrian:
             current = previous[current]
         path.reverse()
 
-        return distances[end], path # Retourne le coût et le chemin
-
-
-    def find_closest_point(self, start):
-        return min(self.graph, key=lambda p: math.dist(start, p))
-
+        return int(distances[end]), path # Retourne le coût et le chemin

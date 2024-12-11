@@ -131,8 +131,6 @@ class EnvironmentMeta:
                 nodes.append((30 + j*100 + 10, 30 + i*100 + 90))
                 nodes.append((30 + j*100 + 90, 30 + i*100 + 90))
 
-        # creer graphe avec les noeuds et des poids (poids = distance euclidienne * 2)
-        # liaisons uniquement entre les noeuds adjacents horizontaux et verticaux, et diagonales si la condition is_crossable est vraie entre les deux noeuds
         graph = {}
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
         for i, node1 in enumerate(nodes):
@@ -152,5 +150,46 @@ class EnvironmentMeta:
                         graph[node1][node2] = ((node2[0] - node1[0])**2 + (node2[1] - node1[1])**2)**0.5 * 2
         
         return graph
+    
+    def add_ends_to_graph(self, graph, start, end):
+
+        graph[start] = {}
+        graph[end] = {}
+        
+        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        
+        for node in graph:
+            if node == start:
+                continue
+            for direction in directions:
+                if node == (start[0] + direction[0]*20, start[1] + direction[1]*20):
+                    graph[start][node] = 20 * 2
+                    continue
+                elif node == (start[0] + direction[0]*80, start[1] + direction[1]*80):
+                    graph[start][node] = 80 * 2
+                    continue
+            if start[0] != node[0] and start[1] != node[1]:
+                if self.is_crossable(start, node):
+                    graph[start][node] = ((node[0] - start[0])**2 + (node[1] - start[1])**2)**0.5 * 2
+
+        for node in graph:
+            if node == end:
+                continue
+            for direction in directions:
+                if node == (end[0] + direction[0]*20, end[1] + direction[1]*20):
+                    graph[end][node] = 20 * 2
+                    continue
+                elif node == (end[0] + direction[0]*80, end[1] + direction[1]*80):
+                    graph[end][node] = 80 * 2
+                    continue
+            if end[0] != node[0] and end[1] != node[1]:
+                if self.is_crossable(end, node):
+                    graph[end][node] = ((node[0] - end[0])**2 + (node[1] - end[1])**2)**0.5 * 2
+
+
+        return graph
+
+
+
         
         
