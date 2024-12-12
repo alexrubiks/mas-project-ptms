@@ -152,6 +152,12 @@ class Render:
         self.render_multiline_text(self.screen, text, font, (0, 0, 0), 700, 300)
 
 
+    def draw_pedestrian_number(self, n):
+        font = pygame.font.Font(None, 25)
+        text = f"Nombre actuel d'usagers :\n{n}"
+        self.render_multiline_text(self.screen, text, font, (0, 0, 0), 700, 250)
+
+
     def render_multiline_text(self, surface, text, font, color, x, y, line_spacing=5):
         lines = text.split('\n')
         for i, line in enumerate(lines):
