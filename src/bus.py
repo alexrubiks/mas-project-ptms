@@ -1,10 +1,11 @@
 import heapq
 
 class Bus:
-    def __init__(self, stops, start_at, color) -> None:
+    def __init__(self, stops, start_at, line_name, color) -> None:
         # caracteristiques
         self.x, self.y = stops[start_at]
         self.speed = 6
+        self.line_name = line_name
 
         # trajet
         self.todo = stops[start_at+1:]

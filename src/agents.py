@@ -56,16 +56,25 @@ bus_list = []
 
 def generate_bus(line_name, start=0):
     if line_name == "A":
-        bus_list.append(Bus(A_line_stops, start, A_line_bus_color))
+        bus_list.append(Bus(A_line_stops, start, "A", A_line_bus_color))
     elif line_name == "B":
-        bus_list.append(Bus(B_line_stops, start, B_line_bus_color))
+        bus_list.append(Bus(B_line_stops, start, "B", B_line_bus_color))
     elif line_name == "C":
-        bus_list.append(Bus(C_line_stops, start, C_line_bus_color))
+        bus_list.append(Bus(C_line_stops, start, "C", C_line_bus_color))
     elif line_name == "D":
-        bus_list.append(Bus(D_line_stops, start, D_line_bus_color))
+        bus_list.append(Bus(D_line_stops, start, "D", D_line_bus_color))
     elif line_name == "E":
-        bus_list.append(Bus(E_line_stops, start, E_line_bus_color))
-    
+        bus_list.append(Bus(E_line_stops, start, "E", E_line_bus_color))
+
+def is_bus_stop(point):
+    x, y = point
+    lines = []
+    for line in bus_lines:
+        if (x, y) in line.stops:
+            lines.append(line.name)
+
+    return lines if lines else False
+
 ### Pedestrians ###
 
 grid_graph = meta.pedestrian_graph()
@@ -84,19 +93,18 @@ def generate_pedestrian():
 ### Events ###
 
 events = {}
-
-events[(6, 0, 0)] = [["pedestrian", 100]]
+events[(6, 0, 0)] = [["pedestrian", 150]]
 
 # ajout de piétons durant la journée
 for h in range(6, 20):
-    for m in range(0, 60, 5):
-        if (h, m) != (6, 0):
-            events[(h, m, 0)] = [["pedestrian", randint(1, 5)]]
+    for m in range(0, 60):
+        for s in range(0, 60, 10):
+            if (h, m, s) != (6, 0, 0):
+                events[(h, m, s)] = [["pedestrian", randint(1, 2)]]
 
 # ligne A
 for b in range(7):
     h, m = divmod(b*2, 60)
-    print((6+h, m, 0))
     if (key := (6+h, m, 0)) not in events:
         events[key] = [["bus", "A"]]
     else:
@@ -105,7 +113,6 @@ for b in range(7):
 # ligne B
 for b in range(7):
     h, m = divmod(b*2, 60)
-    print((6+h, m, 0))
     if (key := (6+h, m, 0)) not in events:
         events[key] = [["bus", "B"]]
     else:
@@ -114,7 +121,6 @@ for b in range(7):
 # ligne C
 for b in range(6):
     h, m = divmod(b*2, 60)
-    print((6+h, m, 0))
     if (key := (6+h, m, 0)) not in events:
         events[key] = [["bus", "C"]]
     else:
@@ -123,7 +129,6 @@ for b in range(6):
 # ligne D
 for b in range(7):
     h, m = divmod(b*2, 60)
-    print((6+h, m, 0))
     if (key := (6+h, m, 0)) not in events:
         events[key] = [["bus", "D"]]
     else:
@@ -132,12 +137,10 @@ for b in range(7):
 # ligne E
 for b in range(7):
     h, m = divmod(b*2, 60)
-    print((6+h, m, 0))
     if (key := (6+h, m, 0)) not in events:
         events[key] = [["bus", "E"]]
     else:
         events[key].append(["bus", "E"])
-
 
 
 def event_checker():
@@ -147,5 +150,4 @@ def event_checker():
                 for _ in range(event[1]):
                     generate_pedestrian()
             elif event[0] == "bus":
-                print("BUS GENERE")
                 generate_bus(event[1])

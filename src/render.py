@@ -153,10 +153,38 @@ class Render:
 
 
     def render_multiline_text(self, surface, text, font, color, x, y, line_spacing=5):
-
         lines = text.split('\n')
         for i, line in enumerate(lines):
             rendered_line = font.render(line, True, color)
             surface.blit(rendered_line, (x, y + i * (rendered_line.get_height() + line_spacing)))
 
-    
+
+    def draw_time_chart(self, durations):
+        if sum(durations) == 0:
+            return
+
+        interval = 5 * 60
+        max_duration = max(durations)
+        num_intervals = (max_duration // interval) + 1
+        interval_counts = [0] * num_intervals
+
+        for duration in durations:
+            index = duration // interval
+            interval_counts[index] += 1
+
+        bar_width = 200 / len(interval_counts)
+        chart_height = 100
+        max_count = max(max(interval_counts), 1)
+
+        for i, count in enumerate(interval_counts):
+            bar_height = chart_height * (count / max_count)
+            pygame.draw.rect(
+                self.screen, 
+                (200, 200, 200), 
+                (705 + i * bar_width, 500 - bar_height, bar_width - 5, bar_height)
+            )
+
+        font = pygame.font.Font(None, 20)
+        for i in range(len(interval_counts) + 1):
+            text = font.render(f"{i * 5}", True, (0, 0, 0))
+            self.screen.blit(text, (700 + i * bar_width, 510))
