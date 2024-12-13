@@ -83,6 +83,16 @@ class Render:
                 (x - 2 + shift, y - 2 + shift, 5, 5)
             )
 
+    def draw_bus_in_menu(self):
+        glass_color = (0, 255, 255)
+        bus_colors = [(200, 0, 0), (0, 0, 200), (250, 210, 50), (0, 200, 0), (170, 0, 170)]
+        for i, color in enumerate(bus_colors):
+            x = 860
+            y = 72 + i * 80
+            pygame.draw.rect(self.screen, (0, 0, 0), (x-5, y-13, 16, 32))
+            pygame.draw.rect(self.screen, color, (x-4, y-12, 14, 30))
+            pygame.draw.rect(self.screen, glass_color, (x-3, y-11, 12, 6))
+
 
     def draw_bus(self, bus_list):
         """

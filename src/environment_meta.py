@@ -54,6 +54,16 @@ class EnvironmentMeta:
         self.walk_area = set()
         self.precalculate_walk_areas()
 
+        # bus
+        self.used_lines = []
+        self.bus_numbers = {
+            "A": 7,
+            "B": 7,
+            "C": 6,
+            "D": 7,
+            "E": 7,
+        }
+
 
     def tick(self):
         self.seconds += 1
