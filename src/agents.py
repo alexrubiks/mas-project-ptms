@@ -77,7 +77,6 @@ def is_bus_stop(point):
 
 ### Pedestrians ###
 
-grid_graph = meta.pedestrian_graph()
 pedestrian_list = []
 
 def generate_pedestrian():
@@ -85,7 +84,7 @@ def generate_pedestrian():
         pass
     while not meta.is_walk_area(x_dest := randint(0, 700), y_dest := randint(0, 700)):
         pass
-    p_graph = meta.add_bus_lines_to_graph(grid_graph, meta.used_lines)
+    p_graph = meta.add_bus_lines_to_graph(meta.primary_graph, meta.used_lines)
     full_graph = meta.add_ends_to_graph(p_graph, (x, y), (x_dest, y_dest))
     pedestrian_list.append(Pedestrian(x, y, (x_dest, y_dest), full_graph))
 
@@ -107,45 +106,50 @@ def generate_events():
     # ligne A
 
     if "A" in [line.name for line in meta.used_lines]:
-        for b in range(meta.bus_numbers["A"]):
-            h, m = divmod(b*2, 60)
-            if (key := (6+h, m, 0)) not in events:
+        times = [int(840 / meta.bus_numbers[0] * i) for i in range(meta.bus_numbers[0])]
+        for b in range(meta.bus_numbers[0]):
+            m, s = divmod(times[b], 60)
+            if (key := (6, m, s)) not in events:
                 events[key] = [["bus", "A"]]
             else:
                 events[key].append(["bus", "A"])
 
     # ligne B
     if "B" in [line.name for line in meta.used_lines]:
-        for b in range(meta.bus_numbers["B"]):
-            h, m = divmod(b*2, 60)
-            if (key := (6+h, m, 0)) not in events:
+        times = [int(840 / meta.bus_numbers[1] * i) for i in range(meta.bus_numbers[1])]
+        for b in range(meta.bus_numbers[1]):
+            m, s = divmod(times[b], 60)
+            if (key := (6, m, s)) not in events:
                 events[key] = [["bus", "B"]]
             else:
                 events[key].append(["bus", "B"])
 
         # ligne C
     if "C" in [line.name for line in meta.used_lines]:
-        for b in range(meta.bus_numbers["C"]):
-            h, m = divmod(b*2, 60)
-            if (key := (6+h, m, 0)) not in events:
+        times = [int(840 / meta.bus_numbers[2] * i) for i in range(meta.bus_numbers[2])]
+        for b in range(meta.bus_numbers[2]):
+            m, s = divmod(times[b], 60)
+            if (key := (6, m, s)) not in events:
                 events[key] = [["bus", "C"]]
             else:
                 events[key].append(["bus", "C"])
 
         # ligne D
     if "D" in [line.name for line in meta.used_lines]:
-        for b in range(meta.bus_numbers["D"]):
-            h, m = divmod(b*2, 60)
-            if (key := (6+h, m, 0)) not in events:
+        times = [int(840 / meta.bus_numbers[3] * i) for i in range(meta.bus_numbers[3])]
+        for b in range(meta.bus_numbers[3]):
+            m, s = divmod(times[b], 60)
+            if (key := (6, m, s)) not in events:
                 events[key] = [["bus", "D"]]
             else:
                 events[key].append(["bus", "D"])
 
         # ligne E
     if "E" in [line.name for line in meta.used_lines]:
-        for b in range(meta.bus_numbers["E"]):
-            h, m = divmod(b*2, 60)
-            if (key := (6+h, m, 0)) not in events:
+        times = [int(840 / meta.bus_numbers[4] * i) for i in range(meta.bus_numbers[4])]
+        for b in range(meta.bus_numbers[4]):
+            m, s = divmod(times[b], 60)
+            if (key := (6, m, s)) not in events:
                 events[key] = [["bus", "E"]]
             else:
                 events[key].append(["bus", "E"])

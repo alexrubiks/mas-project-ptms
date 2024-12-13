@@ -1,6 +1,0 @@
-prendre bus
-
-recalculer correctement le temps de trajet moyen
-bus schedules
-
-comparer temps de trajet

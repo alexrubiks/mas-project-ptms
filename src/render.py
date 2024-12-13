@@ -30,7 +30,6 @@ class Render:
                 else:
                     pygame.draw.rect(self.screen, (148, 255, 141), (x+100*i, y+100*j, 100, 100))
 
-
         # Dessiner les lignes horizontales
         for row in range(self.rows + 1):
             start_pos = (x-7, y + row * self.cell_size)
@@ -42,6 +41,26 @@ class Render:
             start_pos = (x + col * self.cell_size, y)
             end_pos = (x + col * self.cell_size, y + self.rows * self.cell_size)
             pygame.draw.line(self.screen, (200, 200, 200), start_pos, end_pos, 16)
+
+        # Dessiner les routes horizontales en travaux (pointillés rouges et blancs)
+        for j, row in enumerate(meta.horizontal_roads):
+            for i, road in enumerate(row):
+                if road == 0:
+                    road_x = x + 100 * i + 11
+                    road_y = y + 100 * j
+                    for k in range(0, 80, 10):
+                        color = (255, 0, 0) if k % 20 == 0 else (255, 255, 255)
+                        pygame.draw.line(self.screen, color, (road_x + k, road_y), (road_x + k + 10, road_y), 16)
+
+        # Dessiner les routes verticales en travaux (pointillés rouges et blancs)
+        for j, row in enumerate(meta.vertical_roads):
+            for i, road in enumerate(row):
+                if road == 0:
+                    road_x = x + 100 * i
+                    road_y = y + 100 * j + 11
+                    for k in range(0, 80, 10):
+                        color = (255, 0, 0) if k % 20 == 0 else (255, 255, 255)
+                        pygame.draw.line(self.screen, color, (road_x, road_y + k), (road_x, road_y + k + 10), 16)
 
 
     def draw_bus_stops(self, line) -> None:
