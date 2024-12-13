@@ -1,4 +1,4 @@
-Project Report: Public Transport Mobility Simulation
+Project 1 Report: Public Transport Mobility Simulation
 ------------------------------------------------------
 TREMELLAT Alexis & PERRIOT Mathieu - 2024
 ___
@@ -38,12 +38,12 @@ These disruptions aim to observe how agents adapt to unexpected changes and quan
 ## Difficulties Encountered
 
 ### Pedestrian Behavior
-- Implementing the logic for pedestrians to choose between walking and bus travel.
-- Calculating their travel was challenging because first implementation was not efficient (took way longer than expected and slow down the simulation).
+One of the main challenges encountered was calculating pedestrian travel routes. Initially, we attempted to represent the entire walkable area as a grid of points and use the A* algorithm to find the optimal path. While the results were accurate, the computation proved to be extremely slow, significantly hampering simulation performance.
+
+To address this issue, we pre-generated a graph at the start, with vertices at each corner of buildings or parks and edges representing walkable paths between them. Using the same logic, we added links to bus stops. For each pedestrian, a copy of this graph was created, linking their specific starting and ending points. By applying Dijkstra's algorithm to this graph, we achieved satisfactory execution speeds, even with over a hundred pedestrians moving simultaneously.
 
 ### Bus Representation
-- Ensuring buses follow their routes and schedules correctly.
-- Managing the interactions between buses and passengers at stops.
+Ensuring buses followed their routes and schedules correctly presented another challenge. Managing the interactions between buses and passengers at stops required careful implementation to synchronize movements and maintain realistic behavior.
 
 
 ## How to use the simulation
